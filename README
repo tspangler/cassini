@@ -1,0 +1,17 @@
+Cassini is a relay for commands between a remote, firewalled system and the outside world. Think of a space probe, with the lander on the surface of a body doing the science and the orbiter circling above, sending the probe's data back to earth.
+
+*Anatomy of a Cassini mission*
+The orbiter is a very small Sinatra application that is always running on a public domain. The lander is a slightly more complicated Ruby script and is where the magic happens. Here's how:
+
+1.	The lander is invoked (through cron scheduling or other means) and makes a simple HTTP GET request to the orbiter for its payload file.
+
+2.	If there's a payload file (called beacon.txt), the orbiter will return its contents. Usually this will be the string "GA," for "go ahead."
+
+3.	Upon receiving either an error code or the payload instructions from the orbiter, the lander will perform its assigned duty (in execute_payload).
+
+4.	The lander then reports its success or failure back to the orbiter with one more simple HTTP GET.
+
+5.	Upon receiving a success or failure signal from the lander, the orbiter notifies the user (aka "mission control") of the result of the mission.
+
+*Why 'Cassini'?*
+Initially I referred to this system as just "the orbiter" and "the lander," respectively. But they needed a snappier name before being released into the wild, and nothing's more fitting than naming them after the Cassini-Huygens mission, a knock-out tag team that came, saw and completely conquered Saturn's moon Titan back in 2004. The Huygens lander descended through Titan's thick cloud cover and sent back to the Cassini orbiter the first images from the surface of a solar system body other than the Moon, Venus or Mars.
